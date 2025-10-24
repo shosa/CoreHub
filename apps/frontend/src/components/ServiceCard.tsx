@@ -78,7 +78,7 @@ export default function ServiceCard({ app }: ServiceCardProps) {
               width: 80,
               height: 80,
               position: 'relative',
-              filter: isOnline ? 'none' : 'grayscale(1)',
+              filter: isOnline ? 'brightness(0) invert(1)' : 'grayscale(1)',
             }}
           >
             <Image

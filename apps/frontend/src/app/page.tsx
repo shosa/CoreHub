@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   Container,
   Typography,
@@ -101,30 +102,16 @@ export default function Home() {
         >
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 6 }}>
-            <Typography
-              variant="h2"
-              component="h1"
-              gutterBottom
-              sx={{
-                fontWeight: 700,
-                color: '#1a1a1a',
-                mb: 2,
-              }}
-            >
-              Core Suite
-            </Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                color: '#666',
-                mb: 3,
-              }}
-            >
-              Dashboard Gestionale Unificata
-            </Typography>
+            <Image
+              src="/logo.png"
+              alt="CoreSuite Logo"
+              width={400}
+              height={100}
+              style={{ objectFit: 'contain' }}
+            />
 
             {!loading && (
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 3 }}>
                 <Chip
                   label={`${onlineCount} Servizi Online`}
                   color="success"

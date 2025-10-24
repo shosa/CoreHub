@@ -12,7 +12,7 @@ export const CORE_APPS: CoreApp[] = [
   {
     id: 'coremachine',
     name: 'CoreMachine',
-    description: 'Gestione Macchine e Produzione',
+    description: 'Registro Macchine e Manutenzioni',
     icon: '🏭',
     url: 'http://localhost:81',
     containerName: 'coremachine-frontend',
