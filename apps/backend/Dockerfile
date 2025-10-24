@@ -30,6 +30,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/backend/dist ./dist
 COPY --from=builder /app/apps/backend/package.json ./
 
-EXPOSE 3001
+EXPOSE 3005
 
 CMD ["npm", "run", "start:prod"]

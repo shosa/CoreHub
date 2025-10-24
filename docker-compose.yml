@@ -7,7 +7,7 @@ services:
     container_name: corehub-backend
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "3005:3005"
     networks:
       - core-network
     # Monta il socket Docker per permettere di controllare i container
@@ -24,14 +24,14 @@ services:
     container_name: corehub-frontend
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3004:3004"
     depends_on:
       - backend
     networks:
       - core-network
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+      NEXT_PUBLIC_API_URL: http://localhost:3005/api
 
 networks:
   core-network:
