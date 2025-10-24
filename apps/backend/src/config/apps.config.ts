@@ -1,3 +1,10 @@
+import * as dotenv from 'dotenv';
+
+// Carica le variabili d'ambiente
+dotenv.config();
+
+const BASE_URL = process.env.BASE_URL || 'http://localhost';
+
 export interface CoreApp {
   id: string;
   name: string;
@@ -14,7 +21,7 @@ export const CORE_APPS: CoreApp[] = [
     name: 'CoreMachine',
     description: 'Registro Macchine e Manutenzioni',
     icon: '🏭',
-    url: 'http://192.168.3.131:81',
+    url: `${BASE_URL}:81`,
     containerName: 'coremachine-frontend',
     color: '#1976d2', // Blue
   },
@@ -23,7 +30,7 @@ export const CORE_APPS: CoreApp[] = [
     name: 'CoreDocument',
     description: 'Gestione Documentale',
     icon: '📄',
-    url: 'http://192.168.3.131:82',
+    url: `${BASE_URL}:82`,
     containerName: 'coredocument-frontend',
     color: '#2e7d32', // Green
   },
@@ -33,7 +40,7 @@ export const CORE_APPS: CoreApp[] = [
   //   name: 'CoreInventory',
   //   description: 'Gestione Magazzino',
   //   icon: '📦',
-  //   url: 'http://localhost:83',
+  //   url: `${BASE_URL}:83`,
   //   containerName: 'coreinventory-frontend',
   //   color: '#ed6c02', // Orange
   // },

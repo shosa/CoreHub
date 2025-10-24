@@ -6,7 +6,7 @@ async function bootstrap() {
 
   // CORS per permettere al frontend di chiamare l'API
   app.enableCors({
-    origin: ['http://192.168.3.131:3004', 'http://192.168.3.131', 'http://localhost:3004', 'http://localhost:3000', 'http://localhost'],
+    origin: [process.env.APP_URL || 'http://localhost:3004', 'http://localhost:3000', 'http://localhost'],
     credentials: true,
   });
 
