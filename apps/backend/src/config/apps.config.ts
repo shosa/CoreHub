@@ -34,6 +34,15 @@ export const CORE_APPS: CoreApp[] = [
     containerName: 'coredocument-frontend',
     color: '#2e7d32', // Green
   },
+   {
+    id: 'corevisitor',
+    name: 'CoreVisitor',
+    description: 'Gestione Visitatori',
+    icon: '📄',
+    url: `${BASE_URL}:83`,
+    containerName: 'corevisitor-frontend',
+    color: '#e27329ff', // Green
+  },
   // Facile aggiungere nuove app in futuro:
   // {
   //   id: 'coreinventory',
