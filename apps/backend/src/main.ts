@@ -6,15 +6,15 @@ async function bootstrap() {
 
   // CORS per permettere al frontend di chiamare l'API
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost'],
+    origin: ['http://192.168.3.131:3004', 'http://192.168.3.131', 'http://localhost:3004', 'http://localhost:3000', 'http://localhost'],
     credentials: true,
   });
 
   // Prefix per le API
   app.setGlobalPrefix('api');
 
-  await app.listen(3001);
-  console.log('🚀 CoreHub Backend running on http://localhost:3001');
+  await app.listen(3005);
+  console.log('🚀 CoreHub Backend running on http://localhost:3005');
 }
 
 bootstrap();

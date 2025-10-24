@@ -14,7 +14,7 @@ export const CORE_APPS: CoreApp[] = [
     name: 'CoreMachine',
     description: 'Registro Macchine e Manutenzioni',
     icon: '🏭',
-    url: 'http://localhost:81',
+    url: 'http://192.168.3.131:81',
     containerName: 'coremachine-frontend',
     color: '#1976d2', // Blue
   },
@@ -23,7 +23,7 @@ export const CORE_APPS: CoreApp[] = [
     name: 'CoreDocument',
     description: 'Gestione Documentale',
     icon: '📄',
-    url: 'http://localhost:82',
+    url: 'http://192.168.3.131:82',
     containerName: 'coredocument-frontend',
     color: '#2e7d32', // Green
   },
