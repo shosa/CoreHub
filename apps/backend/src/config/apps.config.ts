@@ -1,9 +1,9 @@
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 
 // Carica le variabili d'ambiente
 dotenv.config();
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost';
+const BASE_URL = process.env.BASE_URL || "http://localhost";
 
 export interface CoreApp {
   id: string;
@@ -17,31 +17,31 @@ export interface CoreApp {
 
 export const CORE_APPS: CoreApp[] = [
   {
-    id: 'coremachine',
-    name: 'CoreMachine',
-    description: 'Registro Macchine e Manutenzioni',
-    icon: '🏭',
+    id: "coremachine",
+    name: "CoreMachine",
+    description: "Registro Macchine e Manutenzioni",
+    icon: "🏭",
     url: `${BASE_URL}:81`,
-    containerName: 'coremachine-frontend',
-    color: '#1976d2', // Blue
+    containerName: "coremachine-frontend",
+    color: "#1976d2", // Blue
   },
   {
-    id: 'coredocument',
-    name: 'CoreDocument',
-    description: 'Gestione Documentale',
-    icon: '📄',
+    id: "coredocument",
+    name: "CoreDocument",
+    description: "Gestione Documentale",
+    icon: "📄",
     url: `${BASE_URL}:82`,
-    containerName: 'coredocument-frontend',
-    color: '#2e7d32', // Green
+    containerName: "coredocument-frontend",
+    color: "#2e7d32", // Green
   },
-   {
-    id: 'corevisitor',
-    name: 'CoreVisitor',
-    description: 'Gestione Visitatori',
-    icon: '📄',
+  {
+    id: "corevisitor",
+    name: "CoreVisitor",
+    description: "Gestione Visitatori",
+    icon: "📄",
     url: `${BASE_URL}:83`,
-    containerName: 'corevisitor-frontend',
-    color: '#e27329ff', // Green
+    containerName: "corevisitor-frontend",
+    color: "#e27329ff", // Green
   },
   // Facile aggiungere nuove app in futuro:
   // {

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Container,
   Typography,
@@ -13,28 +13,28 @@ import {
   CssBaseline,
   Chip,
   CircularProgress,
-} from '@mui/material';
-import ServiceCard from '@/components/ServiceCard';
+} from "@mui/material";
+import ServiceCard from "@/components/ServiceCard";
 
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#dc004e",
     },
     background: {
-      default: '#ffffff',
-      paper: '#f5f5f5',
+      default: "#ffffff",
+      paper: "#f5f5f5",
     },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundImage: 'none',
+          backgroundImage: "none",
         },
       },
     },
@@ -49,13 +49,13 @@ export interface AppStatus {
   url: string;
   containerName: string;
   color: string;
-  status: 'online' | 'offline';
+  status: "online" | "offline";
 }
 
 export interface ServiceStatus {
   name: string;
   containerName: string;
-  status: 'online' | 'offline';
+  status: "online" | "offline";
 }
 
 export default function Home() {
@@ -65,12 +65,12 @@ export default function Home() {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch('/api/status');
+      const response = await fetch("/api/status");
       const data = await response.json();
       setApps(data.apps || []);
       setServices(data.services || []);
     } catch (error) {
-      console.error('Errore nel caricamento dello stato delle app:', error);
+      console.error("Errore nel caricamento dello stato delle app:", error);
     } finally {
       setLoading(false);
     }
@@ -85,7 +85,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const onlineCount = apps.filter((app) => app.status === 'online').length;
+  const onlineCount = apps.filter((app) => app.status === "online").length;
 
   return (
     <ThemeProvider theme={theme}>
@@ -93,25 +93,32 @@ export default function Home() {
       <Container maxWidth="lg">
         <Box
           sx={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
             py: 8,
           }}
         >
           {/* Header */}
-          <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Box sx={{ textAlign: "center", mb: 6 }}>
             <Image
               src="/logo.png"
               alt="CoreSuite Logo"
               width={400}
               height={100}
-              style={{ objectFit: 'contain' }}
+              style={{ objectFit: "contain" }}
             />
 
             {!loading && (
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 3 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  justifyContent: "center",
+                  mt: 3,
+                }}
+              >
                 <Chip
                   label={`${onlineCount} Servizi Online`}
                   color="success"
@@ -130,7 +137,7 @@ export default function Home() {
 
           {/* Loading State */}
           {loading && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
               <CircularProgress size={60} />
             </Box>
           )}
@@ -147,29 +154,29 @@ export default function Home() {
           )}
 
           {/* Footer */}
-          <Box sx={{ textAlign: 'center', mt: 8 }}>
+          <Box sx={{ textAlign: "center", mt: 8 }}>
             {/* CoreServices Status */}
             {!loading && services.length > 0 && (
               <Box
                 sx={{
                   mb: 4,
                   p: 3,
-                  backgroundColor: 'background.paper',
+                  backgroundColor: "background.paper",
                   borderRadius: 2,
                 }}
               >
                 <Typography
                   variant="subtitle2"
-                  sx={{ color: '#666', mb: 2, fontWeight: 600 }}
+                  sx={{ color: "#666", mb: 2, fontWeight: 600 }}
                 >
                   CoreServices
                 </Typography>
                 <Box
                   sx={{
-                    display: 'flex',
+                    display: "flex",
                     gap: 2,
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
+                    justifyContent: "center",
+                    flexWrap: "wrap",
                   }}
                 >
                   {services.map((service) => (
@@ -179,15 +186,15 @@ export default function Home() {
                       size="small"
                       sx={{
                         backgroundColor:
-                          service.status === 'online'
-                            ? 'rgba(76, 175, 80, 0.2)'
-                            : 'rgba(244, 67, 54, 0.2)',
+                          service.status === "online"
+                            ? "rgba(76, 175, 80, 0.2)"
+                            : "rgba(244, 67, 54, 0.2)",
                         color:
-                          service.status === 'online' ? '#4caf50' : '#f44336',
+                          service.status === "online" ? "#4caf50" : "#f44336",
                         border: `1px solid ${
-                          service.status === 'online'
-                            ? 'rgba(76, 175, 80, 0.3)'
-                            : 'rgba(244, 67, 54, 0.3)'
+                          service.status === "online"
+                            ? "rgba(76, 175, 80, 0.3)"
+                            : "rgba(244, 67, 54, 0.3)"
                         }`,
                         fontWeight: 500,
                       }}
@@ -197,11 +204,8 @@ export default function Home() {
               </Box>
             )}
 
-            <Typography
-              variant="body2"
-              sx={{ color: '#999' }}
-            >
-              © 2025 CoreSuite - Sistema Gestionale Integrato
+            <Typography variant="body2" sx={{ color: "#999" }}>
+              CoreSuite - Stefano Solidoro
             </Typography>
           </Box>
         </Box>

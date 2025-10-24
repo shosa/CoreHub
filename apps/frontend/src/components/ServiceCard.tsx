@@ -29,8 +29,9 @@ const getLogoPath = (appId: string): string => {
   const logoMap: Record<string, string> = {
     'coremachine': '/logo-coremachine.png',
     'coredocument': '/logo-coredocument.png',
+    'corevisitor': '/logo-corevisitor.png',
   };
-  return logoMap[appId] || '/logo-coremachine.png';
+  return logoMap[appId] || '/logo.png';
 };
 
 export default function ServiceCard({ app }: ServiceCardProps) {
