@@ -37,7 +37,8 @@ const getLogoPath = (appId: string): string => {
 export default function ServiceCard({ app }: ServiceCardProps) {
   const isOnline = app.status === 'online';
 
-  const handleOpen = () => {
+  const handleOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (isOnline) {
       window.open(app.url, '_blank', 'noopener,noreferrer');
     }
@@ -50,19 +51,23 @@ export default function ServiceCard({ app }: ServiceCardProps) {
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s ease-in-out',
-        cursor: isOnline ? 'pointer' : 'default',
-        opacity: isOnline ? 1 : 0.6,
-        backgroundColor: '#1e1e1e',
+        cursor: 'default',
+        opacity: isOnline ? 1 : 0.7,
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(20px)',
+        border: `2px solid ${isOnline ? app.color : 'rgba(0, 0, 0, 0.1)'}`,
+        borderRadius: 3,
+        boxShadow: isOnline
+          ? `0 8px 32px ${alpha(app.color, 0.15)}`
+          : '0 8px 32px rgba(0, 0, 0, 0.05)',
         '&:hover': isOnline
           ? {
-              transform: 'translateY(-8px)',
-              boxShadow: `0 12px 40px ${alpha(app.color, 0.3)}`,
-              borderColor: app.color,
+              transform: 'translateY(-8px) scale(1.01)',
+              boxShadow: `0 16px 48px ${alpha(app.color, 0.3)}`,
+              border: `2px solid ${app.color}`,
             }
           : {},
-        borderLeft: `4px solid ${isOnline ? app.color : 'rgba(255, 255, 255, 0.1)'}`,
       }}
-      onClick={handleOpen}
     >
       <CardContent sx={{ flexGrow: 1, pb: 1 }}>
         {/* Icon e Status */}
@@ -79,7 +84,7 @@ export default function ServiceCard({ app }: ServiceCardProps) {
               width: 80,
               height: 80,
               position: 'relative',
-              filter: isOnline ? 'brightness(0) invert(1)' : 'grayscale(1)',
+              filter: isOnline ? 'none' : 'grayscale(1) opacity(0.5)',
             }}
           >
             <Image
@@ -94,7 +99,16 @@ export default function ServiceCard({ app }: ServiceCardProps) {
               <CircleIcon
                 sx={{
                   fontSize: '0.75rem !important',
-                  color: isOnline ? '#4caf50' : '#f44336',
+                  color: isOnline ? '#4caf50 !important' : '#f44336 !important',
+                  animation: 'pulse 2s ease-in-out infinite',
+                  '@keyframes pulse': {
+                    '0%, 100%': {
+                      opacity: 1,
+                    },
+                    '50%': {
+                      opacity: 0.5,
+                    },
+                  },
                 }}
               />
             }
@@ -102,11 +116,17 @@ export default function ServiceCard({ app }: ServiceCardProps) {
             size="small"
             sx={{
               backgroundColor: isOnline
-                ? alpha('#4caf50', 0.2)
-                : alpha('#f44336', 0.2),
+                ? alpha('#4caf50', 0.15)
+                : alpha('#f44336', 0.15),
               color: isOnline ? '#4caf50' : '#f44336',
               fontWeight: 600,
               border: `1px solid ${isOnline ? alpha('#4caf50', 0.3) : alpha('#f44336', 0.3)}`,
+              boxShadow: isOnline
+                ? '0 0 10px rgba(76, 175, 80, 0.4)'
+                : '0 0 10px rgba(244, 67, 54, 0.4)',
+              '& .MuiChip-icon': {
+                color: isOnline ? '#4caf50 !important' : '#f44336 !important',
+              },
             }}
           />
         </Box>
@@ -118,7 +138,7 @@ export default function ServiceCard({ app }: ServiceCardProps) {
           gutterBottom
           sx={{
             fontWeight: 700,
-            color: isOnline ? 'white' : 'rgba(255, 255, 255, 0.5)',
+            color: isOnline ? '#1a1a1a' : 'rgba(0, 0, 0, 0.4)',
           }}
         >
           {app.name}
@@ -128,7 +148,7 @@ export default function ServiceCard({ app }: ServiceCardProps) {
         <Typography
           variant="body2"
           sx={{
-            color: 'rgba(255, 255, 255, 0.7)',
+            color: isOnline ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.4)',
             mb: 2,
           }}
         >
@@ -144,16 +164,21 @@ export default function ServiceCard({ app }: ServiceCardProps) {
           endIcon={<LaunchIcon />}
           onClick={handleOpen}
           sx={{
-            backgroundColor: app.color,
+            backgroundColor: '#1a1a1a',
+            color: 'white',
             '&:hover': {
-              backgroundColor: alpha(app.color, 0.8),
+              backgroundColor: '#000',
+              transform: 'scale(1.02)',
             },
             '&:disabled': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+              color: 'rgba(0, 0, 0, 0.3)',
             },
             fontWeight: 600,
             textTransform: 'none',
-            py: 1,
+            py: 1.5,
+            transition: 'all 0.2s ease',
+            boxShadow: isOnline ? '0 4px 12px rgba(0, 0, 0, 0.2)' : 'none',
           }}
         >
           {isOnline ? 'Apri Applicazione' : 'Non Disponibile'}
