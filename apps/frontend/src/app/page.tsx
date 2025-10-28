@@ -210,11 +210,13 @@ export default function Home() {
                 // Determina URL e se è clickable
                 let serviceUrl = '';
                 let isClickable = false;
+                const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+
                 if (service.containerName === 'core-mysql' && service.status === 'online') {
-                  serviceUrl = 'http://localhost:8080';
+                  serviceUrl = `http://${hostname}:8080`;
                   isClickable = true;
                 } else if (service.containerName === 'core-minio' && service.status === 'online') {
-                  serviceUrl = 'http://localhost:9001';
+                  serviceUrl = `http://${hostname}:9001`;
                   isClickable = true;
                 }
 
