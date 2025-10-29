@@ -41,6 +41,7 @@ export class StatusService {
       { name: 'MinIO', containerName: 'core-minio' },
       { name: 'Meilisearch', containerName: 'core-meilisearch' },
       { name: 'Nginx', containerName: 'core-nginx' },
+      { name: 'Redis', containerName: 'core-redis' },
     ];
 
     return coreServices.map((service) => ({
