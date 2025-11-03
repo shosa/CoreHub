@@ -258,8 +258,8 @@ export default function Home() {
               <Image
                 src="/logo-footer.png"
                 alt="CoreSuite"
-                width={120}
-                height={30}
+                width={200}
+                height={50}
                 style={{ objectFit: "contain" }}
               />
               <Typography variant="body2" sx={{ color: "#999" }}>
