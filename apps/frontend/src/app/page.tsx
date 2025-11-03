@@ -253,10 +253,35 @@ export default function Home() {
               })}
             </Box>
 
-            {/* Copyright */}
-            <Typography variant="body2" sx={{ color: "#999" }}>
-              CoreSuite - Stefano Solidoro
-            </Typography>
+            {/* Copyright con Logo */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Image
+                src="/logo-footer.png"
+                alt="CoreSuite"
+                width={120}
+                height={30}
+                style={{ objectFit: "contain" }}
+              />
+              <Typography variant="body2" sx={{ color: "#999" }}>
+                -
+              </Typography>
+              <Typography
+                variant="body2"
+                component="a"
+                href="mailto:kishosa@me.com"
+                sx={{
+                  color: "#666",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                  "&:hover": {
+                    color: "#1a1a1a",
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                @StefanoSolidoro
+              </Typography>
+            </Box>
           </Box>
         </Box>
       )}
