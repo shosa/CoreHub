@@ -44,12 +44,12 @@ export const CORE_APPS: CoreApp[] = [
     color: "#9c27b0", // Purple
   },
   {
-    id: "coregre",
-    name: "CoreGre",
+    id: "coregrejs",
+    name: "CoreGRE",
     description: "ERP Gestione Aziendale",
     icon: "/coregre-logo.png",
-    url: `${BASE_URL}:86`,
-    containerName: "coregre-app",
+    url: `${BASE_URL}:3010`,
+    containerName: "coregrejs-frontend",
     color: "#e27329", // Orange
   },
   // Facile aggiungere nuove app in futuro:
