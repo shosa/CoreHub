@@ -2,44 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  Container,
-  Typography,
-  Box,
-  Grid,
-  Paper,
-  ThemeProvider,
-  createTheme,
-  CssBaseline,
-  Chip,
-  CircularProgress,
-} from "@mui/material";
+import { motion, AnimatePresence } from "framer-motion";
 import ServiceCard from "@/components/ServiceCard";
-
-const theme = createTheme({
-  palette: {
-    mode: "light",
-    primary: {
-      main: "#1a1a1a",
-    },
-    secondary: {
-      main: "#666666",
-    },
-    background: {
-      default: "#f5f5f5",
-      paper: "#ffffff",
-    },
-  },
-  components: {
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: "none",
-        },
-      },
-    },
-  },
-});
 
 export interface AppStatus {
   id: string;
@@ -78,183 +42,208 @@ export default function Home() {
 
   useEffect(() => {
     fetchStatus();
-
-    // Polling ogni 30 secondi per aggiornare gli stati
     const interval = setInterval(fetchStatus, 30000);
-
     return () => clearInterval(interval);
   }, []);
 
   const onlineCount = apps.filter((app) => app.status === "online").length;
+  const offlineCount = apps.length - onlineCount;
+
+  const getServiceUrl = (service: ServiceStatus): string | null => {
+    if (service.status !== "online") return null;
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "localhost";
+    if (service.containerName === "core-mysql") return `http://${hostname}:8080`;
+    if (service.containerName === "core-minio") return `http://${hostname}:9001`;
+    return null;
+  };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          pt: 6,
-          pb: 12,
-          px: { xs: 2, sm: 4, md: 6 },
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-          {/* Header - Logo e Status */}
-          <Box
-            sx={{
-              textAlign: "center",
-              mb: 6,
-            }}
-          >
-            <Image
-              src="/logo.png"
-              alt="CoreSuite Logo"
-              width={400}
-              height={100}
-              style={{ objectFit: "contain" }}
-            />
-
-            {!loading && (
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 2,
-                  justifyContent: "center",
-                  mt: 4,
-                }}
-              >
-                <Chip
-                  label={`${onlineCount} Servizi Online`}
-                  color="success"
-                  sx={{
-                    fontWeight: 600,
-                    boxShadow: "0 4px 12px rgba(76, 175, 80, 0.2)",
-                  }}
-                />
-                {onlineCount < apps.length && (
-                  <Chip
-                    label={`${apps.length - onlineCount} Offline`}
-                    color="error"
-                    sx={{
-                      fontWeight: 600,
-                      boxShadow: "0 4px 12px rgba(244, 67, 54, 0.2)",
-                    }}
-                  />
-                )}
-              </Box>
-            )}
-          </Box>
-
-          {/* Loading State */}
-          {loading && (
-            <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-              <CircularProgress size={60} />
-            </Box>
-          )}
-
-          {/* Apps Grid */}
-          {!loading && (
-            <Box sx={{ maxWidth: "1400px", mx: "auto", width: "100%" }}>
-              <Grid container spacing={4}>
-                {apps.map((app) => (
-                  <Grid item xs={12} sm={6} md={4} key={app.id}>
-                    <ServiceCard app={app} />
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
-
-      </Box>
-
-      {/* Footer - CoreServices Status (absolute bottom) */}
-      {!loading && services.length > 0 && (
-        <Box
-          sx={{
-            position: "fixed",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(20px)",
-            borderTop: "1px solid rgba(0, 0, 0, 0.08)",
-            boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.05)",
-            py: 2,
-            px: { xs: 2, sm: 4, md: 6 },
-            zIndex: 100,
-          }}
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      {/* Main Content */}
+      <main style={{ flex: 1, padding: "48px 24px 120px", maxWidth: 1400, margin: "0 auto", width: "100%" }}>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ textAlign: "center", marginBottom: 48 }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: 2,
-              maxWidth: "1400px",
-              mx: "auto",
-            }}
-          >
-            {/* CoreServices label e chips */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-              <Typography
-                variant="body2"
-                sx={{ color: "#666", fontWeight: 600 }}
-              >
-                CoreServices:
-              </Typography>
-              {services.map((service) => {
-                // Determina URL e se è clickable
-                let serviceUrl = '';
-                let isClickable = false;
-                const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+          <Image
+            src="/logo.png"
+            alt="CoreSuite Logo"
+            width={400}
+            height={100}
+            style={{ objectFit: "contain" }}
+            priority
+          />
 
-                if (service.containerName === 'core-mysql' && service.status === 'online') {
-                  serviceUrl = `http://${hostname}:8080`;
-                  isClickable = true;
-                } else if (service.containerName === 'core-minio' && service.status === 'online') {
-                  serviceUrl = `http://${hostname}:9001`;
-                  isClickable = true;
-                }
+          {!loading && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 24, flexWrap: "wrap" }}
+            >
+              <span style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 16px",
+                borderRadius: 50,
+                backgroundColor: "rgba(76, 175, 80, 0.15)",
+                color: "#4caf50",
+                fontSize: 14,
+                fontWeight: 600,
+                boxShadow: "0 4px 12px rgba(76, 175, 80, 0.2)"
+              }}>
+                <span style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  backgroundColor: "#4caf50",
+                  animation: "pulse-dot 2s ease-in-out infinite"
+                }}></span>
+                {onlineCount} Servizi Online
+              </span>
+
+              {offlineCount > 0 && (
+                <span style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "8px 16px",
+                  borderRadius: 50,
+                  backgroundColor: "rgba(244, 67, 54, 0.15)",
+                  color: "#f44336",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  boxShadow: "0 4px 12px rgba(244, 67, 54, 0.2)"
+                }}>
+                  <span style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    backgroundColor: "#f44336",
+                    animation: "pulse-dot 2s ease-in-out infinite"
+                  }}></span>
+                  {offlineCount} Offline
+                </span>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
+
+        {/* Loading State */}
+        {loading && (
+          <div style={{ display: "flex", justifyContent: "center", padding: "80px 0" }}>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: "50%",
+                border: "4px solid #e0e0e0",
+                borderTopColor: "#1976d2"
+              }}
+            />
+          </div>
+        )}
+
+        {/* Apps Grid */}
+        {!loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ staggerChildren: 0.1 }}
+          >
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
+              gap: 24
+            }}>
+              <AnimatePresence>
+                {apps.map((app, index) => (
+                  <motion.div
+                    key={app.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <ServiceCard app={app} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </main>
+
+      {/* Footer */}
+      {!loading && services.length > 0 && (
+        <footer style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(20px)",
+          borderTop: "1px solid rgba(0, 0, 0, 0.08)",
+          boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.05)",
+          padding: "16px 24px",
+          zIndex: 100
+        }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 16,
+            maxWidth: 1400,
+            margin: "0 auto"
+          }}>
+            {/* Services Status */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <span style={{ color: "#666", fontWeight: 600, fontSize: 14 }}>
+                CoreServices:
+              </span>
+              {services.map((service) => {
+                const serviceUrl = getServiceUrl(service);
+                const isClickable = !!serviceUrl;
+                const isOnline = service.status === "online";
 
                 return (
-                  <Chip
+                  <button
                     key={service.containerName}
-                    label={service.name}
-                    size="small"
-                    onClick={isClickable ? () => window.open(serviceUrl, '_blank', 'noopener,noreferrer') : undefined}
-                    sx={{
-                      backgroundColor:
-                        service.status === "online"
-                          ? "rgba(76, 175, 80, 0.15)"
-                          : "rgba(244, 67, 54, 0.15)",
-                      color:
-                        service.status === "online" ? "#4caf50" : "#f44336",
-                      border: `1px solid ${
-                        service.status === "online"
-                          ? "rgba(76, 175, 80, 0.3)"
-                          : "rgba(244, 67, 54, 0.3)"
-                      }`,
+                    onClick={() => isClickable && window.open(serviceUrl!, "_blank", "noopener,noreferrer")}
+                    disabled={!isClickable}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "6px 12px",
+                      borderRadius: 8,
+                      border: `1px solid ${isOnline ? "rgba(76, 175, 80, 0.3)" : "rgba(244, 67, 54, 0.3)"}`,
+                      backgroundColor: isOnline ? "rgba(76, 175, 80, 0.15)" : "rgba(244, 67, 54, 0.15)",
+                      color: isOnline ? "#4caf50" : "#f44336",
+                      fontSize: 12,
                       fontWeight: 500,
-                      cursor: isClickable ? 'pointer' : 'default',
-                      '&:hover': isClickable ? {
-                        backgroundColor: service.status === "online"
-                          ? "rgba(76, 175, 80, 0.25)"
-                          : "rgba(244, 67, 54, 0.25)",
-                        transform: 'scale(1.05)',
-                      } : {},
-                      transition: 'all 0.2s ease',
+                      cursor: isClickable ? "pointer" : "default",
+                      transition: "all 0.2s ease"
                     }}
-                  />
+                  >
+                    <span style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      backgroundColor: isOnline ? "#4caf50" : "#f44336"
+                    }}></span>
+                    {service.name}
+                  </button>
                 );
               })}
-            </Box>
+            </div>
 
-            {/* Copyright con Logo */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            {/* Copyright */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <Image
                 src="/logo-footer.png"
                 alt="CoreSuite"
@@ -262,29 +251,22 @@ export default function Home() {
                 height={50}
                 style={{ objectFit: "contain" }}
               />
-              <Typography variant="body2" sx={{ color: "#999" }}>
-                -
-              </Typography>
-              <Typography
-                variant="body2"
-                component="a"
+              <span style={{ color: "#999" }}>-</span>
+              <a
                 href="mailto:kishosa@me.com"
-                sx={{
+                style={{
                   color: "#666",
                   textDecoration: "none",
                   fontWeight: 500,
-                  "&:hover": {
-                    color: "#1a1a1a",
-                    textDecoration: "underline",
-                  },
+                  fontSize: 14
                 }}
               >
                 @StefanoSolidoro
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
+              </a>
+            </div>
+          </div>
+        </footer>
       )}
-    </ThemeProvider>
+    </div>
   );
 }

@@ -1,3 +1,6 @@
+/* Font Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -6,49 +9,72 @@
 
 html,
 body {
-  max-width: 100vw;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  min-height: 100vh;
-  position: relative;
-  /* Bianco con gradiente grigio verso il basso */
-  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 60%, #e8e8e8 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
+  background-attachment: fixed;
 }
 
-/* Onde grigie al 35% dal basso */
-body::before {
-  content: '';
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 35%;
-  z-index: 0;
-  opacity: 0.4;
-  background:
-    radial-gradient(ellipse at 20% 80%, rgba(150, 150, 150, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 75%, rgba(120, 120, 120, 0.2) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 90%, rgba(100, 100, 100, 0.12) 0%, transparent 60%);
-  animation: waveMove 25s ease-in-out infinite;
-}
-
-@keyframes waveMove {
+/* Animazione pulse per status */
+@keyframes pulse-dot {
   0%, 100% {
-    transform: translateX(0) translateY(0);
+    opacity: 1;
+    transform: scale(1);
   }
   50% {
-    transform: translateX(30px) translateY(-15px);
+    opacity: 0.5;
+    transform: scale(0.85);
   }
 }
 
-/* Sfondo glassmorphism per il contenuto */
-.glass-effect {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+/* Scrollbar custom */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    background-attachment: fixed;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1e293b;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #475569;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+}
+
+/* Antialiased text */
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

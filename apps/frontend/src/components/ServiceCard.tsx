@@ -1,20 +1,7 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-  Button,
-  Box,
-  Chip,
-  alpha,
-} from "@mui/material";
-import {
-  Launch as LaunchIcon,
-  Circle as CircleIcon,
-} from "@mui/icons-material";
 
 interface ServiceCardProps {
   app: {
@@ -40,157 +27,175 @@ const getLogoPath = (appId: string): string => {
 };
 
 export default function ServiceCard({ app }: ServiceCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const isOnline = app.status === "online";
 
-  const handleOpen = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleOpen = () => {
     if (isOnline) {
       window.open(app.url, "_blank", "noopener,noreferrer");
     }
   };
 
+  // Colori border basati sul colore dell'app
+  const getBorderColor = () => {
+    if (!isOnline) return "#e5e7eb";
+    return app.color || "#1976d2";
+  };
+
   return (
-    <Card
-      sx={{
-        height: "100%",
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
-        transition: "all 0.3s ease-in-out",
-        cursor: "default",
-        opacity: isOnline ? 1 : 0.7,
-        background: "rgba(255, 255, 255, 0.95)",
+        height: "100%",
+        borderRadius: 16,
+        border: `2px solid ${getBorderColor()}`,
+        backgroundColor: "rgba(255, 255, 255, 0.95)",
         backdropFilter: "blur(20px)",
-        border: `2px solid ${isOnline ? app.color : "rgba(0, 0, 0, 0.1)"}`,
-        borderRadius: 3,
-        boxShadow: isOnline
-          ? `0 8px 32px ${alpha(app.color, 0.15)}`
-          : "0 8px 32px rgba(0, 0, 0, 0.05)",
-        "&:hover": isOnline
-          ? {
-              transform: "translateY(-8px) scale(1.01)",
-              boxShadow: `0 16px 48px ${alpha(app.color, 0.3)}`,
-              border: `2px solid ${app.color}`,
-            }
-          : {},
+        boxShadow: isHovered && isOnline
+          ? `0 20px 40px ${app.color}30, 0 8px 16px rgba(0,0,0,0.1)`
+          : "0 4px 20px rgba(0, 0, 0, 0.08)",
+        transform: isHovered && isOnline ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
+        transition: "all 0.3s ease",
+        opacity: isOnline ? 1 : 0.6,
+        overflow: "hidden"
       }}
     >
-      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
-        {/* Icon e Status */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            mb: 2,
-          }}
-        >
-          <Box
-            sx={{
-              width: 80,
-              height: 80,
-              position: "relative",
-              filter: isOnline ? "none" : "grayscale(1) opacity(0.5)",
-            }}
-          >
+      {/* Colored top accent bar */}
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 4,
+        background: isOnline ? app.color : "#9ca3af"
+      }} />
+
+      {/* Card Content */}
+      <div style={{ flex: 1, padding: 20, paddingTop: 24 }}>
+        {/* Header: Logo + Status Badge */}
+        <div style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          marginBottom: 16
+        }}>
+          {/* Logo */}
+          <div style={{
+            position: "relative",
+            width: 64,
+            height: 64,
+            borderRadius: 12,
+            overflow: "hidden",
+            backgroundColor: "#f8fafc",
+            padding: 8,
+            filter: isOnline ? "none" : "grayscale(100%)",
+            opacity: isOnline ? 1 : 0.5
+          }}>
             <Image
               src={getLogoPath(app.id)}
               alt={`${app.name} logo`}
               fill
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "contain", padding: 4 }}
             />
-          </Box>
-          <Chip
-            icon={
-              <CircleIcon
-                sx={{
-                  fontSize: "0.75rem !important",
-                  color: isOnline ? "#4caf50 !important" : "#f44336 !important",
-                  animation: "pulse 2s ease-in-out infinite",
-                  "@keyframes pulse": {
-                    "0%, 100%": {
-                      opacity: 1,
-                    },
-                    "50%": {
-                      opacity: 0.5,
-                    },
-                  },
-                }}
-              />
-            }
-            label={isOnline ? "Online" : "Offline"}
-            size="small"
-            sx={{
-              backgroundColor: isOnline
-                ? alpha("#4caf50", 0.15)
-                : alpha("#f44336", 0.15),
-              color: isOnline ? "#4caf50" : "#f44336",
-              fontWeight: 600,
-              border: `1px solid ${
-                isOnline ? alpha("#4caf50", 0.3) : alpha("#f44336", 0.3)
-              }`,
-              boxShadow: isOnline
-                ? "0 0 10px rgba(76, 175, 80, 0.4)"
-                : "0 0 10px rgba(244, 67, 54, 0.4)",
-              "& .MuiChip-icon": {
-                color: isOnline ? "#4caf50 !important" : "#f44336 !important",
-              },
-            }}
-          />
-        </Box>
+          </div>
+
+          {/* Status Badge */}
+          <span style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "6px 12px",
+            borderRadius: 50,
+            fontSize: 12,
+            fontWeight: 600,
+            backgroundColor: isOnline ? "rgba(76, 175, 80, 0.15)" : "rgba(244, 67, 54, 0.15)",
+            color: isOnline ? "#4caf50" : "#f44336",
+            border: `1px solid ${isOnline ? "rgba(76, 175, 80, 0.3)" : "rgba(244, 67, 54, 0.3)"}`
+          }}>
+            <span style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              backgroundColor: isOnline ? "#4caf50" : "#f44336",
+              animation: "pulse-dot 2s ease-in-out infinite"
+            }} />
+            {isOnline ? "Online" : "Offline"}
+          </span>
+        </div>
 
         {/* Title */}
-        <Typography
-          variant="h5"
-          component="h2"
-          gutterBottom
-          sx={{
-            fontWeight: 700,
-            color: isOnline ? "#1a1a1a" : "rgba(0, 0, 0, 0.4)",
-          }}
-        >
+        <h3 style={{
+          fontSize: 20,
+          fontWeight: 700,
+          marginBottom: 8,
+          color: isOnline ? "#1a1a1a" : "#9ca3af"
+        }}>
           {app.name}
-        </Typography>
+        </h3>
 
         {/* Description */}
-        <Typography
-          variant="body2"
-          sx={{
-            color: isOnline ? "rgba(0, 0, 0, 0.7)" : "rgba(0, 0, 0, 0.4)",
-            mb: 2,
-          }}
-        >
+        <p style={{
+          fontSize: 14,
+          lineHeight: 1.6,
+          color: isOnline ? "#666" : "#9ca3af"
+        }}>
           {app.description}
-        </Typography>
-      </CardContent>
+        </p>
+      </div>
 
-      <CardActions sx={{ p: 2, pt: 0 }}>
-        <Button
-          variant="contained"
-          fullWidth
-          disabled={!isOnline}
-          endIcon={<LaunchIcon />}
+      {/* Action Button */}
+      <div style={{ padding: "0 20px 20px" }}>
+        <button
           onClick={handleOpen}
-          sx={{
-            backgroundColor: "#1a1a1a",
-            color: "white",
-            "&:hover": {
-              backgroundColor: "#000",
-              transform: "scale(1.02)",
-            },
-            "&:disabled": {
-              backgroundColor: "rgba(0, 0, 0, 0.1)",
-              color: "rgba(0, 0, 0, 0.3)",
-            },
+          disabled={!isOnline}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            padding: "14px 16px",
+            borderRadius: 12,
+            border: "none",
+            fontSize: 14,
             fontWeight: 600,
-            textTransform: "none",
-            py: 1.5,
+            cursor: isOnline ? "pointer" : "not-allowed",
+            background: isOnline
+              ? `linear-gradient(135deg, ${app.color} 0%, ${app.color}dd 100%)`
+              : "#f1f5f9",
+            color: isOnline ? "#fff" : "#9ca3af",
+            boxShadow: isOnline ? `0 4px 12px ${app.color}40` : "none",
             transition: "all 0.2s ease",
-            boxShadow: isOnline ? "0 4px 12px rgba(0, 0, 0, 0.2)" : "none",
+            transform: isHovered && isOnline ? "scale(1.02)" : "scale(1)"
           }}
         >
-          {isOnline ? "Apri Applicazione" : "Non Disponibile"}
-        </Button>
-      </CardActions>
-    </Card>
+          {isOnline ? (
+            <>
+              Apri Applicazione
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </>
+          ) : (
+            "Non Disponibile"
+          )}
+        </button>
+      </div>
+    </div>
   );
 }
