@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "CoreHub - Suite Gestionale",
   description: "Dashboard centralizzata per la gestione delle applicazioni CoreSuite",
   icons: {
-    icon: "/logo.png",
+    icon: "/favicon.ico",
   },
 };
 
