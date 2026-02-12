@@ -52,6 +52,15 @@ export const CORE_APPS: CoreApp[] = [
     containerName: "coregrejs-frontend",
     color: "#e27329", // Orange
   },
+  {
+    id: "corecanvas",
+    name: "CoreCanvas",
+    description: "Designer e Stampante Etichette ZPL",
+    icon: "🏷️",
+    url: `${BASE_URL}:3008`,
+    containerName: "corecanvas-frontend",
+    color: "#FF6F61", // Coral Red
+  },
   // Facile aggiungere nuove app in futuro:
   // {
   //   id: 'coreinventory',

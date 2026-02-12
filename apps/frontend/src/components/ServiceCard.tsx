@@ -22,6 +22,7 @@ const getLogoPath = (appId: string): string => {
     corevisitor: "/logo-corevisitor.png",
     coregre: "/logo-coregre.png",
     coregrejs: "/logo-coregre.png",
+    corecanvas: "/logo-corecanvas.png",
   };
   return logoMap[appId] || "/logo.png";
 };
