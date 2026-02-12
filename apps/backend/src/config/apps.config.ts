@@ -57,7 +57,7 @@ export const CORE_APPS: CoreApp[] = [
     name: "CoreCanvas",
     description: "Designer e Stampante Etichette ZPL",
     icon: "🏷️",
-    url: `${BASE_URL}:3008`,
+    url: `${BASE_URL}:88`,
     containerName: "corecanvas-frontend",
     color: "#FF6F61", // Coral Red
   },
