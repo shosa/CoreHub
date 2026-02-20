@@ -27,9 +27,12 @@ const getLogoPath = (appId: string): string => {
   return logoMap[appId] || "/logo.png";
 };
 
+const LOGO_NO_INVERT = new Set(["coregrejs", "coregre"]);
+
 export default function ServiceCard({ app }: ServiceCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const isOnline = app.status === "online";
+  const noInvert = LOGO_NO_INVERT.has(app.id);
 
   const getDynamicUrl = (): string => {
     try {
@@ -47,165 +50,88 @@ export default function ServiceCard({ app }: ServiceCardProps) {
     }
   };
 
-  // Colori border basati sul colore dell'app
-  const getBorderColor = () => {
-    if (!isOnline) return "#e5e7eb";
-    return app.color || "#1976d2";
-  };
-
   return (
+    /* Wrapper esterno: gestisce scale senza clip */
     <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       style={{
         position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        borderRadius: 16,
-        border: `2px solid ${getBorderColor()}`,
-        backgroundColor: "rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(20px)",
-        boxShadow: isHovered && isOnline
-          ? `0 20px 40px ${app.color}30, 0 8px 16px rgba(0,0,0,0.1)`
-          : "0 4px 20px rgba(0, 0, 0, 0.08)",
-        transform: isHovered && isOnline ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
-        transition: "all 0.3s ease",
-        opacity: isOnline ? 1 : 0.6,
-        overflow: "hidden"
+        aspectRatio: "1 / 1",
+        transition: "transform 0.15s ease, box-shadow 0.15s ease",
+        transform: isHovered && isOnline ? "scale(1.06)" : "scale(1)",
+        boxShadow: isHovered && isOnline ? "0 8px 28px rgba(0,0,0,0.20)" : "none",
+        zIndex: isHovered ? 10 : 1,
+        cursor: isOnline ? "pointer" : "default",
       }}
+      onClick={handleOpen}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Colored top accent bar */}
+      {/* Inner: colore + clip */}
       <div style={{
         position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: 4,
-        background: isOnline ? app.color : "#9ca3af"
-      }} />
-
-      {/* Card Content */}
-      <div style={{ flex: 1, padding: 20, paddingTop: 24 }}>
-        {/* Header: Logo + Status Badge */}
+        inset: 0,
+        backgroundColor: isOnline ? app.color : "#d0d0d0",
+        overflow: "hidden",
+        filter: isOnline ? "none" : "grayscale(80%) brightness(0.85)",
+        animation: "tile-in 0.3s ease forwards",
+      }}>
+        {/* Logo centrato */}
         <div style={{
+          position: "absolute",
+          inset: 0,
           display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          marginBottom: 16
+          alignItems: "center",
+          justifyContent: "center",
+          padding: noInvert ? 16 : 28,
         }}>
-          {/* Logo */}
           <div style={{
             position: "relative",
-            width: 64,
-            height: 64,
-            borderRadius: 12,
-            overflow: "hidden",
-            backgroundColor: "#f8fafc",
-            padding: 8,
-            filter: isOnline ? "none" : "grayscale(100%)",
-            opacity: isOnline ? 1 : 0.5
+            width: noInvert ? "70%" : "60%",
+            height: noInvert ? "70%" : "60%",
+            opacity: isOnline ? 1 : 0.4,
+            filter: noInvert ? "none" : "brightness(0) invert(1)",
           }}>
             <Image
               src={getLogoPath(app.id)}
-              alt={`${app.name} logo`}
+              alt={app.name}
               fill
-              style={{ objectFit: "contain", padding: 4 }}
+              style={{ objectFit: "contain" }}
             />
           </div>
+        </div>
 
-          {/* Status Badge */}
+        {/* Nome app in basso a sinistra */}
+        <div style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: "6px 10px",
+          background: "rgba(0,0,0,0.2)",
+        }}>
           <span style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            padding: "6px 12px",
-            borderRadius: 50,
-            fontSize: 12,
-            fontWeight: 600,
-            backgroundColor: isOnline ? "rgba(76, 175, 80, 0.15)" : "rgba(244, 67, 54, 0.15)",
-            color: isOnline ? "#4caf50" : "#f44336",
-            border: `1px solid ${isOnline ? "rgba(76, 175, 80, 0.3)" : "rgba(244, 67, 54, 0.3)"}`
+            fontSize: 11,
+            fontWeight: 700,
+            color: "#fff",
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
           }}>
-            <span style={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              backgroundColor: isOnline ? "#4caf50" : "#f44336",
-              animation: "pulse-dot 2s ease-in-out infinite"
-            }} />
-            {isOnline ? "Online" : "Offline"}
+            {app.name}
           </span>
         </div>
 
-        {/* Title */}
-        <h3 style={{
-          fontSize: 20,
-          fontWeight: 700,
-          marginBottom: 8,
-          color: isOnline ? "#1a1a1a" : "#9ca3af"
-        }}>
-          {app.name}
-        </h3>
-
-        {/* Description */}
-        <p style={{
-          fontSize: 14,
-          lineHeight: 1.6,
-          color: isOnline ? "#666" : "#9ca3af"
-        }}>
-          {app.description}
-        </p>
-      </div>
-
-      {/* Action Button */}
-      <div style={{ padding: "0 20px 20px" }}>
-        <button
-          onClick={handleOpen}
-          disabled={!isOnline}
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            padding: "14px 16px",
-            borderRadius: 12,
-            border: "none",
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: isOnline ? "pointer" : "not-allowed",
-            background: isOnline
-              ? `linear-gradient(135deg, ${app.color} 0%, ${app.color}dd 100%)`
-              : "#f1f5f9",
-            color: isOnline ? "#fff" : "#9ca3af",
-            boxShadow: isOnline ? `0 4px 12px ${app.color}40` : "none",
-            transition: "all 0.2s ease",
-            transform: isHovered && isOnline ? "scale(1.02)" : "scale(1)"
-          }}
-        >
-          {isOnline ? (
-            <>
-              Apri Applicazione
-              <svg
-                width="16"
-                height="16"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
-            </>
-          ) : (
-            "Non Disponibile"
-          )}
-        </button>
+        {/* Dot status in alto a destra */}
+        <div style={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+          width: 7,
+          height: 7,
+          borderRadius: "50%",
+          backgroundColor: isOnline ? "#fff" : "#888",
+          animation: isOnline ? "pulse-dot 2s ease-in-out infinite" : "none",
+          opacity: isOnline ? 0.85 : 0.5,
+        }} />
       </div>
     </div>
   );
