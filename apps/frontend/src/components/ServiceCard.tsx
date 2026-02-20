@@ -31,9 +31,19 @@ export default function ServiceCard({ app }: ServiceCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const isOnline = app.status === "online";
 
+  const getDynamicUrl = (): string => {
+    try {
+      const parsed = new URL(app.url);
+      parsed.hostname = window.location.hostname;
+      return parsed.toString();
+    } catch {
+      return app.url;
+    }
+  };
+
   const handleOpen = () => {
     if (isOnline) {
-      window.open(app.url, "_blank", "noopener,noreferrer");
+      window.open(getDynamicUrl(), "_blank", "noopener,noreferrer");
     }
   };
 
