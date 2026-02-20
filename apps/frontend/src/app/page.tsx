@@ -50,6 +50,7 @@ export default function Home() {
     const hostname = typeof window !== "undefined" ? window.location.hostname : "localhost";
     if (service.containerName === "core-mysql") return `http://${hostname}:8080`;
     if (service.containerName === "core-minio") return `http://${hostname}:9001`;
+    if (service.containerName === "zplbox") return `http://${hostname}:7272`;
     return null;
   };
 

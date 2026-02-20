@@ -44,12 +44,34 @@ export class StatusService {
       { name: 'Redis', containerName: 'core-redis' },
     ];
 
-    return coreServices.map((service) => ({
+    const dockerStatuses: ServiceStatus[] = coreServices.map((service) => ({
       ...service,
       status: runningContainers.includes(service.containerName)
         ? 'online'
         : 'offline',
     }));
+
+    // ZplBox: check HTTP invece di Docker (servizio esterno non containerizzato)
+    const zplboxStatus = await this.checkZplBox();
+
+    return [...dockerStatuses, zplboxStatus];
+  }
+
+  private async checkZplBox(): Promise<ServiceStatus> {
+    const url = process.env.ZPLBOX_URL || 'http://localhost:7272';
+    try {
+      const res = await fetch(`${url}/status`, {
+        signal: AbortSignal.timeout(3000),
+      });
+      const data = await res.json().catch(() => ({})) as { status?: string };
+      return {
+        name: 'ZplBox',
+        containerName: 'zplbox',
+        status: data.status === 'UP' ? 'online' : 'offline',
+      };
+    } catch {
+      return { name: 'ZplBox', containerName: 'zplbox', status: 'offline' };
+    }
   }
 
   async getFullStatus(): Promise<FullStatus> {
